@@ -44,12 +44,14 @@ def get_reader_books(reader_id):
     WHERE r.reader_id = ?
     ''', (reader_id,))
     return cursor.fetchall()
-
-def search_books(keyword):
+    
+def give_book(reader_id, book_id):
     cursor.execute('''
-    SELECT * FROM books WHERE title LIKE ? OR author LIKE ?
-    ''', ('%' + keyword + '%', '%' + keyword + '%'))
-    return cursor.fetchall()
-
+    UPDATE books SET available = 0 WHERE book_id = ?
+    ''', (book_id,))
+    cursor.execute('''
+    UPDATE readers SET book_id = ? WHERE reader_id = ?
+    ''', (book_id, reader_id))
+    
 def close_connection():
     conn.close()
